@@ -6,17 +6,19 @@
             {{ post.published_date }}
             <br />
             <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span
-                    class="glyphicon glyphicon-pencil"></span></a>
+                                        class="glyphicon glyphicon-pencil"></span></a>
             <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span
-                    class="glyphicon glyphicon-remove"></span></a>{% else %}
+                                        class="glyphicon glyphicon-remove"></span></a>{% else %}
             <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
             <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span
-                    class="glyphicon glyphicon-pencil"></span></a>
+                                        class="glyphicon glyphicon-pencil"></span></a>
             <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span
-                    class="glyphicon glyphicon-remove"></span></a> {% endif %}
+                                        class="glyphicon glyphicon-remove"></span></a> {% endif %}
         </div>
-        <h1>{{ post.title }}</h1>
-        <p>{{ post.text|linebreaksbr }}</p>
+        <h1>
+            <img src="/media/{{ post.image }}"> {{form.as_p}}
+        </h1>
+        <p>{{ post.content|linebreaksbr }}</p>
     </div>
     <hr />
     <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a>
@@ -25,9 +27,9 @@
         <div class="date">
             {{ comment.created_date }} {% if not comment.approved_comment %}
             <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span
-                    class="glyphicon glyphicon-remove"></span></a>
+                                        class="glyphicon glyphicon-remove"></span></a>
             <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span
-                    class="glyphicon glyphicon-ok"></span></a> {% endif %}
+                                        class="glyphicon glyphicon-ok"></span></a> {% endif %}
         </div>
         <strong>{{ comment.author }}</strong>
         <p>{{ comment.text|linebreaks }}</p>

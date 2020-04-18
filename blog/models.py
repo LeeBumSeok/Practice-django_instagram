@@ -1,13 +1,25 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFill
+
+
+def post_image_path(instance, filename):
+    return f'posts/{instance.content}/{instance.content}.jpg'
 
 
 class Post(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    text = models.TextField()
+    content = models.TextField()
+    image = ProcessedImageField(
+        upload_to=post_image_path,
+        processors=[ResizeToFill(600, 600)],
+        format='JPEG',
+        options={'quality': 90},
+    )
     created_date = models.DateTimeField(
         default=timezone.now)
     published_date = models.DateTimeField(

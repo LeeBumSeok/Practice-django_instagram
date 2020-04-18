@@ -6,7 +6,11 @@ from django.contrib.auth.models import User
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
-        fields = ('title', 'text',)
+        fields = ('title', 'content', 'image')
+
+        def __init__(self, *args, **kwargs):
+            super(PostForm, self).__init__(*args, **kwargs)
+            self.fields['image'].required = False
 
 
 class CommentForm(forms.ModelForm):
@@ -20,10 +24,3 @@ class UserForm(forms.ModelForm):
     class Meta:
         model = User
         fields = ('username', 'password')
-
-
-def clean_username(self):
-    username = self.cleaned_data['username']
-    if User.objects.filter(username=username).exists():
-        raise forms.ValidationError('아이디가 이미 사용중입니다')
-    return username
