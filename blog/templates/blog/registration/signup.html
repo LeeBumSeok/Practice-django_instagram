@@ -1,0 +1,19 @@
+{% extends 'blog/base.html' %} {% block content %}{% if form.errors %}
+<p>존재하는 아이디입니다. 다른 아이디를 입력해주세요.</p>
+{% endif %}
+<div class="container">
+    <h1>회원 가입</h1>
+
+    <form method="POST" action="{%url 'signup'%}">
+        {% csrf_token %} 아이디를 입력해주세요 :
+        <br><input name="username" type="text">
+        <br> 비밀번호를 입력해주세요:<br>
+        <input name="password1" type="password">
+        <br>비밀번호를 다시 입력해주세요:<br>
+        <input name="password2" type="password">
+        <br> <br>
+        <input type="submit" class="btn btn-primary" value="sign up">
+
+    </form>
+</div>
+{% endblock%}

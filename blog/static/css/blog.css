@@ -1,3 +1,12 @@
+h1 a {
+    color: #fca205;
+    font-family: 'Coming Soon', cursive;
+}
+
+body {
+    padding-left: 15px;
+}
+
 .page-header {
     background-color: #ff9400;
     margin-top: 0;
@@ -25,7 +34,12 @@ h4 {
 }
 
 .date {
-    color: #828282;
+    color: #008000;
+}
+
+.date-details {
+    color: #008000;
+    text-align: right;
 }
 
 .save {
@@ -53,4 +67,8 @@ h4 {
 .post h1 a,
 .post h1 a:visited {
     color: #000000;
+}
+
+.comment {
+    margin: 20px 0px 20px 20px;
 }
