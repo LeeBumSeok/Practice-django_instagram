@@ -6,9 +6,11 @@ from imagekit.processors import ResizeToFill
 import uuid
 import os
 
+
 def post_image_path(instance, filename):
     filename = "%s.jpg" % (uuid.uuid4())
-    return os.path.join('uploads/images', filename)
+    return os.path.join('uploads/images/', filename)
+
 
 class Post(models.Model):
     author = models.ForeignKey(

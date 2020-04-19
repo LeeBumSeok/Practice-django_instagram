@@ -69,6 +69,11 @@ h4 {
     color: #000000;
 }
 
+.author {
+    font-size: 23pt;
+    font-weight: 700;
+}
+
 .comment {
     margin: 20px 0px 20px 20px;
 }
