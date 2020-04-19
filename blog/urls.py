@@ -18,6 +18,7 @@ urlpatterns = [
         views.comment_approve, name='comment_approve'),
     url(r'^comment/(?P<pk>\d+)/remove/$',
         views.comment_remove, name='comment_remove'),
+    path('warning', views.warning, name='warning'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

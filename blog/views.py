@@ -53,8 +53,13 @@ def post_edit(request, pk):
             post.save()
             return redirect('post_detail', pk=post.pk)
     else:
-        form = PostForm(instance=post)
-    return render(request, 'blog/post_edit.html', {'form': form})
+        author = Post.objects.get(pk=pk)
+        if author.author == User.objects.get(username=request.user.get_username()):
+            author = Post.objects.get(pk=pk)
+            form = PostForm(instance=post)
+            return render(request, 'blog/post_edit.html', {'form': form})
+        else:
+            return redirect('warning')
 
 
 @login_required
@@ -74,10 +79,15 @@ def post_publish(request, pk):
 @login_required
 def post_remove(request, pk):
     post = get_object_or_404(Post, pk=pk)
-    post.delete()
-    return redirect('post_list')
+    author = Post.objects.get(pk=pk)
+    if author.author == User.objects.get(username=request.user.get_username()):
+        post.delete()
+        return redirect('post_list')
+    else:
+        return redirect('warning')
 
 
+@login_required
 def add_comment_to_post(request, pk):
     post = get_object_or_404(Post, pk=pk)
     if request.method == "POST":
@@ -85,6 +95,7 @@ def add_comment_to_post(request, pk):
         if form.is_valid():
             comment = form.save(commit=False)
             comment.post = post
+            comment.author = request.user
             comment.save()
             return redirect('post_detail', pk=post.pk)
     else:
@@ -95,15 +106,23 @@ def add_comment_to_post(request, pk):
 @login_required
 def comment_approve(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
-    comment.approve()
-    return redirect('post_detail', pk=comment.post.pk)
+    if str(comment.author) == str(User.objects.get(username=request.user.get_username())):
+        comment.approve()
+        return redirect('post_detail', pk=comment.post.pk)
+    else:
+        return redirect('warning')
 
 
 @login_required
 def comment_remove(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
-    comment.delete()
-    return redirect('post_detail', pk=comment.post.pk)
+    print(comment.author)
+    print(User.objects.get(username=request.user.get_username()))
+    if str(comment.author) == str(User.objects.get(username=request.user.get_username())):
+        comment.delete()
+        return redirect('post_detail', pk=comment.post.pk)
+    else:
+        return redirect('warning')
 
 
 def signup(request):
@@ -118,3 +137,7 @@ def signup(request):
             return redirect('/')
 
     return render(request, 'blog/registration/signup.html')
+
+
+def warning(request):
+    return render(request, 'blog/warning.html')

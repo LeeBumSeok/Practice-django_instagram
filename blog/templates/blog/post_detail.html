@@ -1,10 +1,10 @@
 {% extends 'blog/base.html' %} {% block content %}
 <div class="post">
+    <div class="author">
+        {{ post.author }}
+    </div>
     {% if post.published_date %}
     <div>
-        <div class="author">
-            {{ post.author }}
-        </div>
         <div class="date-details">
             <br />
             <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span
@@ -16,6 +16,7 @@
                     class="glyphicon glyphicon-pencil"></span></a>
             <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span
                     class="glyphicon glyphicon-remove"></span></a> {% endif %}
+
         </div>
         <h1>
             <img src="/media/{{ post.image }}"> {{form.as_p}}
