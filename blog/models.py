@@ -5,6 +5,7 @@ from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
+from django.contrib.auth import forms
 import uuid
 import os
 
@@ -38,6 +39,9 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    def like_people(self):
+        return self.like_user_set.all()
 
     @property
     def like_count(self):
@@ -73,3 +77,10 @@ class Like(models.Model):
 
     class Meta:
         unique_together = (('user', 'blog'))
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=64)
+    profile_photo = models.ImageField(blank=True)

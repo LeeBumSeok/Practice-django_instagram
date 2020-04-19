@@ -12,6 +12,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django import forms
 from django.http import HttpResponseRedirect, HttpResponse
+from django.views.generic.detail import DetailView
 
 
 # Create your views here.
@@ -97,6 +98,7 @@ def add_comment_to_post(request, pk):
             comment = form.save(commit=False)
             comment.post = post
             comment.author = request.user
+            temp = comment.author.pk
             comment.save()
             return redirect('post_detail', pk=post.pk)
     else:
@@ -149,3 +151,9 @@ def post_like(request, pk):
 
 def warning(request):
     return render(request, 'blog/warning.html')
+
+
+class ProfileView(DetailView):
+    context_object_name = 'profile_user'
+    model = User
+    template_name = 'blog/profile.html'

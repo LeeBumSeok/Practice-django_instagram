@@ -1,7 +1,8 @@
 {% extends 'blog/base.html' %} {% block content %} {% for post in posts %}
 <div class="post">
     <div class="author">
-        {{ post.author }}
+        <a href="{% url 'profile' post.author.pk %}"> {{ post.author }}
+        </a>
     </div>
     <h1>
         <a href="{% url 'post_detail' pk=post.pk %}">
@@ -17,5 +18,6 @@
     <div class="date">
         {{ post.published_date }}
     </div>
+    <hr>
 </div>
 {% endfor %} {% endblock %}

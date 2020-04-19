@@ -20,6 +20,8 @@ urlpatterns = [
         views.comment_remove, name='comment_remove'),
     path('warning', views.warning, name='warning'),
     path('like/<int:pk>/', views.post_like, name='post_like'),
+    url(r'^profile/(?P<pk>[0-9]+)/$',
+        views.ProfileView.as_view(), name='profile'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

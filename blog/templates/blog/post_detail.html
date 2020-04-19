@@ -1,7 +1,8 @@
 {% extends 'blog/base.html' %} {% block content %}
 <div class="post">
     <div class="author">
-        {{ post.author }}
+        <a href="{% url 'profile' post.author.pk %}"> {{ post.author }}
+        </a>
     </div>
     {% if post.published_date %}
     <div>
@@ -27,6 +28,7 @@
             <button type="submit" value="Like">좋아요</button>
         </form>
         <p>좋아요 {{ post.like_count }}개</p>
+        {{post.like_people}}
         <div class="date">
             {{ post.published_date }}
         </div>
@@ -34,6 +36,10 @@
     <hr /> {% for comment in post.comments.all %} {% if user.is_authenticated or comment.approved_comment %}
 
     <div class="comment">
+
+        <a href="{% url 'profile' comment.pk %}"> <strong>{{ comment.author }}</strong>
+        </a>
+
         <div class="date">
             {{ comment.created_date }} {% if not comment.approved_comment %}
             <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span
@@ -41,7 +47,7 @@
             <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span
                     class="glyphicon glyphicon-ok"></span></a> {% endif %}
         </div>
-        <strong>{{ comment.author }}</strong>
+
         <p>{{ comment.text|linebreaks }}</p>
     </div>
     {% endif %} {% empty %}
