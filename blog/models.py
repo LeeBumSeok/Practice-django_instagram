@@ -6,7 +6,7 @@ from imagekit.processors import ResizeToFill
 
 
 def post_image_path(instance, filename):
-    return f'posts/{instance.content}/{instance.content}.jpg'
+    return f'posts/{instance.pk}/{instance.pk}.jpg'
 
 
 class Post(models.Model):
