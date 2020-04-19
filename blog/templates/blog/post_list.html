@@ -9,7 +9,10 @@
         </a>
     </h1>
     <p>{{ post.content|linebreaksbr }}</p>
-    <a href="{% url 'post_detail' pk=post.pk %}">Comments: {{ post.approved_comments.count }}</a>
+    <a class="btn btn-default" href="{% url 'post_like' post.id %}">좋아요</a> &nbsp;
+    <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a><br><br>
+    <a href="{% url 'post_detail' pk=post.pk %}"> 좋아요: {{ post.like_count }}개 댓글:
+        {{ post.approved_comments.count }}개</a>
     <br> <br>
     <div class="date">
         {{ post.published_date }}

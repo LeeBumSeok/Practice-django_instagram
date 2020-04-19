@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^comment/(?P<pk>\d+)/remove/$',
         views.comment_remove, name='comment_remove'),
     path('warning', views.warning, name='warning'),
+    path('like/<int:pk>/', views.post_like, name='post_like'),
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

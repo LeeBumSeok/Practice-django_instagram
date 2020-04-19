@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 
+from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from .models import Post, Comment
@@ -10,7 +11,7 @@ from .forms import PostForm, CommentForm
 from django.contrib.auth.models import User
 from django.contrib.auth import login
 from django import forms
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 
 
 # Create your views here.
@@ -116,8 +117,6 @@ def comment_approve(request, pk):
 @login_required
 def comment_remove(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
-    print(comment.author)
-    print(User.objects.get(username=request.user.get_username()))
     if str(comment.author) == str(User.objects.get(username=request.user.get_username())):
         comment.delete()
         return redirect('post_detail', pk=comment.post.pk)
@@ -128,15 +127,24 @@ def comment_remove(request, pk):
 def signup(request):
     if request.method == "POST":
         form = UserForm(request.POST)
-        # if User.objects.filter(username=request.POST["username"]).exists():
-        #     return forms.Widget(attrs=True)
         if request.POST['password1'] == request.POST['password2']:
             user = User.objects.create_user(
                 username=request.POST["username"], password=request.POST['password1'])
             login(request, user)
             return redirect('/')
-
     return render(request, 'blog/registration/signup.html')
+
+
+@login_required
+def post_like(request, pk):
+    post = get_object_or_404(Post, pk=pk)
+    post_like, post_like_created = post.like_set.get_or_create(
+        user=request.user)
+
+    if not post_like_created:
+        post_like.delete()
+        return redirect('/post/'+str(post.id))
+    return redirect('/post/'+str(post.id))
 
 
 def warning(request):

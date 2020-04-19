@@ -3,6 +3,8 @@ from django.db import models
 from django.utils import timezone
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFill
+from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 import uuid
 import os
 
@@ -27,6 +29,8 @@ class Post(models.Model):
         default=timezone.now)
     published_date = models.DateTimeField(
         blank=True, null=True)
+    like_user_set = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, blank=True, related_name='like_user_set', through='Like')
 
     def publish(self):
         self.published_date = timezone.now()
@@ -34,6 +38,10 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+    @property
+    def like_count(self):
+        return self.like_user_set.count()
 
     def approved_comments(self):
         return self.comments.filter(approved_comment=True)
@@ -53,3 +61,15 @@ class Comment(models.Model):
 
     def __str__(self):
         return self.text
+
+
+class Like(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,
+                             on_delete=models.CASCADE)
+    blog = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = (('user', 'blog'))
