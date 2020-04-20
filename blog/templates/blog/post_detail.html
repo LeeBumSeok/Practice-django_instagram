@@ -28,7 +28,10 @@
             <button type="submit" value="Like">좋아요</button>
         </form>
         <p>좋아요 {{ post.like_count }}개</p>
-        {{post.like_people}}
+        <br>
+        {% for person in post.like_people %}
+        <p>{{ person }}</p>
+        {% endfor %}
         <div class="date">
             {{ post.published_date }}
         </div>
