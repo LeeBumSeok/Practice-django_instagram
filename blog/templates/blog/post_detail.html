@@ -7,11 +7,11 @@
     {% if post.published_date %}
     <div>
         <div class="date-details">
-            <br />
+            <br /> {% if user == post.author %}
             <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span
                     class="glyphicon glyphicon-pencil"></span></a>
             <a class="btn btn-default" href="{% url 'post_remove' pk=post.pk %}"><span
-                    class="glyphicon glyphicon-remove"></span></a>{% else %}
+                    class="glyphicon glyphicon-remove"></span></a>{% endif %}{% else %}
             <a class="btn btn-default" href="{% url 'post_publish' pk=post.pk %}">Publish</a>
             <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span
                     class="glyphicon glyphicon-pencil"></span></a>
@@ -23,16 +23,15 @@
             <img src="/media/{{ post.image }}"> {{form.as_p}}
         </h1>
         <p>{{ post.content|linebreaksbr }}</p>
-        <form action="{% url 'post_like' post.id%}" method="POST">
-            {% csrf_token %}
-            <button type="submit" value="Like">좋아요</button>
-        </form>
-        <p>좋아요 {{ post.like_count }}개</p>
-        <br>
-        {% for person in post.like_people %}
-        <p>{{ person }}</p>
+        <a class="btn btn-default" href="{% url 'post_like' post.id %}">좋아요</a> &nbsp;
+        <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a><br><br>
+        <a href="{% url 'post_likelist' pk=post.pk %}">
+            <p>좋아요 {{ post.like_count }}개</p>
+        </a>
+        <br> {% for person in post.like_people %}
+        <p><a href="{% url 'profile' person.pk %}">{{ person }}</a></p>
         {% endfor %}
-        <div class="date">
+        <div class=" date">
             {{ post.published_date }}
         </div>
     </div>
@@ -40,15 +39,13 @@
 
     <div class="comment">
 
-        <a href="{% url 'profile' comment.pk %}"> <strong>{{ comment.author }}</strong>
+        <a href="{% url 'profile' comment.author.pk %}"> <strong>{{ comment.author }}</strong>
         </a>
 
         <div class="date">
-            {{ comment.created_date }} {% if not comment.approved_comment %}
+            {{ comment.created_date }} {% if user == comment.author %}
             <a class="btn btn-default" href="{% url 'comment_remove' pk=comment.pk %}"><span
-                    class="glyphicon glyphicon-remove"></span></a>
-            <a class="btn btn-default" href="{% url 'comment_approve' pk=comment.pk %}"><span
-                    class="glyphicon glyphicon-ok"></span></a> {% endif %}
+                    class="glyphicon glyphicon-remove"></span></a> {% endif %}
         </div>
 
         <p>{{ comment.text|linebreaks }}</p>

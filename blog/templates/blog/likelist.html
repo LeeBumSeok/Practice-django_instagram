@@ -1,0 +1,8 @@
+{% extends 'blog/base.html' %} {% block content %}
+<div>
+    <p>좋아요 {{ post.like_count }}개</p>
+    <br> {% for person in post.like_people %}
+    <p><a href="{% url 'profile' person.pk %}">{{ person }}</a></p>
+    {% endfor %}
+</div>
+{% endblock %}

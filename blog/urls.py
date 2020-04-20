@@ -3,6 +3,8 @@ from . import views
 from django.conf.urls import url
 from django.conf.urls.static import static
 from django.conf import settings
+from .views import ProfileUpdateView
+from django.contrib.auth.decorators import login_required
 
 urlpatterns = [
     path('', views.post_list, name='post_list'),
@@ -20,8 +22,14 @@ urlpatterns = [
         views.comment_remove, name='comment_remove'),
     path('warning', views.warning, name='warning'),
     path('like/<int:pk>/', views.post_like, name='post_like'),
+    path('post/<int:pk>/likelist/', views.post_likelist, name='post_likelist'),
     url(r'^profile/(?P<pk>[0-9]+)/$',
-        views.ProfileView.as_view(), name='profile'),
+        views.login_required(views.ProfileView.as_view()), name='profile'),
+    url(r'^profile_update/$', login_required(ProfileUpdateView.as_view()),
+        name='profile_update'),
+    path('follow/<int:pk>/', views.Following.as_view, name='following'),
+    path('unfollow/<int:pk>/', views.Unfollow.as_view, name='unfollow'),
+
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

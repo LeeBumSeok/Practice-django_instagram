@@ -11,13 +11,22 @@
         {% if profile_user.profile.nickname %}
         <h2>{{profile_user.profile.nickname}}</h2>
         {% endif %} {% if user == profile_user %}
-        <!-- 로그인한 사용자와 profile_user(프로필 소유자)가 일치할 때만 프로필 편집이 가능하도록 함 -->
-        <a href="#">
+        <a href="{% url 'profile_update' %}">
             <button type="button" class="btn btn-default">프로필 편집</button></a>
         </h2>
         {% endif %}
-        <h3> 아이디: {{profile_user.username}} <br> {% if profile_user.first_name is not None %} 이름: {{profile_user.first_name}} {{profile_user.last_name}} <br> {% endif %}
+        <h3> 아이디: {{profile_user.username}} <br> {% if profile_user.first_name is not None %} 이름: {{profile_user.last_name}}{{profile_user.first_name}} <br> {% endif %}
         </h3>
+        <div>
+            {% for object in profile %}
+            <tr>
+                <td>{{ object.username }}</td>
+                <td><a href="{% url 'following' object.id %}" class="btn btn-xs btn-outline-success">Follow</a>
+                </td>
+                <td><a href="{% url 'unfollow' object.id %}" class="btn btn-xs btn-outline-success">UnFollow</a></td>
+            </tr>
+            {% endfor %}
+        </div>
     </div>
 </div>
 

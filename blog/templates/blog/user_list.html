@@ -1,0 +1,10 @@
+{% extends 'blog/base.html' %}
+<table class="table">
+    {% for object in object_list %}
+    <tr>
+        <td>{{ object.username }}</td>
+        <td><a href="{% url 'accounts:following' object.id %}" class="btn btn-xs btn-outline-success">Follow</a></td>
+        <td><a href="{% url 'accounts:unfollow' object.id %}" class="btn btn-xs btn-outline-success">UnFollow</a></td>
+    </tr>
+    {% endfor %}
+</table>
