@@ -1,19 +1,35 @@
-{% extends 'blog/base.html' %} {% block content %} {% for post in posts %}
+{% extends 'blog/base.html' %} {% block content %} {% for post in posts %} {% load staticfiles %}
 <div class="post">
-    <div class="author">
+    <div style="float:left; margin-right: 10;">
+        {% if post.author.profile.profile_photo %}
+        <img class="round" src="{{post.author.profile.profile_photo.url}}" width="30"> <br> {% else %}
+        <img class="round" src="{% static 'blog/images/default_profile.jpg' %}" width="30"> <br> {% endif %}
+    </div>
+    <div style="font-size: x-large; width: 100; margin: 0;float: left;">
         <a href="{% url 'profile' post.author.pk %}"> {{ post.author }}
         </a>
     </div>
+    <br>
+    <hr>
     <h1>
         <a href="{% url 'post_detail' pk=post.pk %}">
             <form enctype="multipart/form-data" action="" method="post"><img src="/media/{{ post.image }}">
         </a>
     </h1>
     <p>{{ post.content|linebreaksbr }}</p>
+    <hr>
     <a class="btn btn-default" href="{% url 'post_like' post.id %}">좋아요</a> &nbsp;
     <a class="btn btn-default" href="{% url 'add_comment_to_post' pk=post.pk %}">Add comment</a><br><br>
-    <a href="{% url 'post_detail' pk=post.pk %}"> 좋아요: {{ post.like_count }}개 댓글:
-        {{ post.approved_comments.count }}개</a>
+
+    <div style="width: 80; margin: 0;float: left;">
+        <a href="{% url 'post_likelist' pk=post.pk %}">
+            <p>좋아요 {{ post.like_count }}개</p>
+        </a>
+    </div>
+    <div style="width: 100; margin: 0;float: left;">
+        <a href="{% url 'post_detail' pk=post.pk %}">댓글:
+            {{ post.approved_comments.count }}개</a>
+    </div>
     <br> <br>
     <div class="date">
         {{ post.published_date }}

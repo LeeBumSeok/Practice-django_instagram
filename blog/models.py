@@ -78,3 +78,28 @@ class Like(models.Model):
 
     class Meta:
         unique_together = (('user', 'blog'))
+
+
+class Profile(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    nickname = models.CharField(max_length=64)
+    profile_photo = models.ImageField(blank=True)
+    user_follow_set = models.ManyToManyField(
+        settings.AUTH_USER_MODEL, blank=True, related_name='follow_user_set', through='Follow')
+
+    def follow_people(self):
+        return self.user_follow_set.all()
+
+    @property
+    def follow_count(self):
+        return self.user_follow_set.count()
+
+
+class Follow(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    following = models.ForeignKey(Profile, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('user', 'following'))

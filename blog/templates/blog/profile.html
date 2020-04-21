@@ -8,25 +8,19 @@
     </div>
 
     <div class="col-xs-6 col-md-3">
-        {% if profile_user.profile.nickname %}
-        <h2>{{profile_user.profile.nickname}}</h2>
-        {% endif %} {% if user == profile_user %}
+        {% if user == profile_user %}
         <a href="{% url 'profile_update' %}">
             <button type="button" class="btn btn-default">프로필 편집</button></a>
         </h2>
+        {% else %}
+        <a class="btn btn-default" href="{% url 'follow' profile_user.id %}">팔로우</a> {% endif %} {% if profile_user.profile.nickname %}
+        <h2>{{profile_user.profile.nickname}}</h2>
         {% endif %}
         <h3> 아이디: {{profile_user.username}} <br> {% if profile_user.first_name is not None %} 이름: {{profile_user.last_name}}{{profile_user.first_name}} <br> {% endif %}
         </h3>
-        <div>
-            {% for object in profile %}
-            <tr>
-                <td>{{ object.username }}</td>
-                <td><a href="{% url 'following' object.id %}" class="btn btn-xs btn-outline-success">Follow</a>
-                </td>
-                <td><a href="{% url 'unfollow' object.id %}" class="btn btn-xs btn-outline-success">UnFollow</a></td>
-            </tr>
-            {% endfor %}
-        </div>
+        <p>팔로우 {{ profile.follow_count }}명</p>
+        <br>
+
     </div>
 </div>
 

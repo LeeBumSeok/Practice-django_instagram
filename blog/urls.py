@@ -25,10 +25,9 @@ urlpatterns = [
     path('post/<int:pk>/likelist/', views.post_likelist, name='post_likelist'),
     url(r'^profile/(?P<pk>[0-9]+)/$',
         views.login_required(views.ProfileView.as_view()), name='profile'),
+    path('follow/<int:pk>/', views.follow, name='follow'),
     url(r'^profile_update/$', login_required(ProfileUpdateView.as_view()),
         name='profile_update'),
-    path('follow/<int:pk>/', views.Following.as_view, name='following'),
-    path('unfollow/<int:pk>/', views.Unfollow.as_view, name='unfollow'),
 
 ]
 

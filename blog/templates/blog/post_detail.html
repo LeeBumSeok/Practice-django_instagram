@@ -1,12 +1,18 @@
-{% extends 'blog/base.html' %} {% block content %}
+{% extends 'blog/base.html' %} {% block content %} {% load staticfiles %}
+
 <div class="post">
-    <div class="author">
+    <div style="float:left; margin-right: 10;">
+        {% if post.author.profile.profile_photo %}
+        <img class="round" src="{{post.author.profile.profile_photo.url}}" width="30"> <br> {% else %}
+        <img class="round" src="{% static 'blog/images/default_profile.jpg' %}" width="30"> <br> {% endif %}
+    </div>
+    <div style="font-size: x-large; width: 100; margin: 0;float: left;">
         <a href="{% url 'profile' post.author.pk %}"> {{ post.author }}
         </a>
     </div>
     {% if post.published_date %}
     <div>
-        <div class="date-details">
+        <div style="float: right;">
             <br /> {% if user == post.author %}
             <a class="btn btn-default" href="{% url 'post_edit' pk=post.pk %}"><span
                     class="glyphicon glyphicon-pencil"></span></a>
@@ -19,6 +25,8 @@
                     class="glyphicon glyphicon-remove"></span></a> {% endif %}
 
         </div>
+        <br>
+        <hr>
         <h1>
             <img src="/media/{{ post.image }}"> {{form.as_p}}
         </h1>

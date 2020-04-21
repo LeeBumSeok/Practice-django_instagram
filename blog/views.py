@@ -3,7 +3,7 @@
 from django.views.decorators.http import require_POST
 from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
-from .models import Post, Comment, Follow
+from .models import Post, Comment, Follow, Profile
 from .forms import PostForm, UserForm
 from django.shortcuts import redirect, reverse
 from django.contrib.auth.decorators import login_required
@@ -213,78 +213,12 @@ class UserList(ListView):
     template_name = 'blog/user_list.html'
 
 
-class Following(View):
-    def get(self, request, *args, pk):
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        else:
-            user = request.user
-            opponent = User.objects.get(pk=pk)
-
-            if user != opponent:
-                if not Follow.objects.filter(who=user):
-                    Follow.objects.create(who=user)
-
-                if not Follow.objects.filter(who=opponent):
-                    Follow.objects.create(who=opponent)
-
-            Iam = Follow.objects.get(who=user.id)
-            Uare = Follow.objects.get(who=opponent.id)
-
-            if str(opponent.id) not in Iam.following.split():
-                Iam.following += f'{opponent.id} '
-                Uare.followedBy += f'{user.id}'
-                Iam.save()
-                Uare.save()
-        return HttpResponseRedirect(reverse('followlist'))
-
-
-class Unfollow(View):
-
-    def get(self, request, *args, pk):
-
-        if not request.user.is_authenticated:
-            return HttpResponseRedirect(reverse('login'))
-        else:
-            user = request.user
-            opponent = User.objects.get(pk=pk)
-
-            if user != opponent:
-                Iam = Follow.objects.get(who=user.id)
-                Uare = Follow.objects.get(who=opponent.id)
-
-                if str(opponent.id) in Iam.following.split():
-
-                    Iam.following = Iam.following.replace(
-                        f' {opponent.id} ', ' ')
-                    Uare.followedBy = Uare.followedBy.replace(
-                        f' {user.id} ', ' ')
-                    Iam.save()
-                    Uare.save()
-
-            return HttpResponseRedirect(reverse('followlist'))
-
-
-class FollowList(View):
-    template_name = 'blog/follow_list'
-
-    def get(self, request, *args, **kwargs):
-        context = {}
-
-        context['following_list'] = self.get_following_list()
-        context['followed_list'] = self.get_followedBy_list()
-        return render(request, 'blog/follow_list.html', context)
-
-
-def get_following_list(self):
-    user = self.request.user
-    selected = Follow.objects.get(who=user.id)
-
-    following_id = selected.following.split()
-    following_id.remove('0')
-    following_list = []
-    for num in following_id:
-        follower = User.objects.get(id=int(num))
-        following_list.append(follower)
-
-    return following_list
+@login_required
+def follow(request, pk):
+    profile = get_object_or_404(Profile, pk=pk)
+    profile_follow, profile_follow_created = profile.follow_set.get_or_create(
+        user=request.user)
+    if not profile_follow_created:
+        profile_follow.delete()
+        return redirect('/profile/'+str(profile.id))
+    return redirect('/profile/'+str(profile.id))
